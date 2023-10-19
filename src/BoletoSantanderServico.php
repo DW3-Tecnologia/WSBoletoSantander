@@ -31,12 +31,41 @@ class BoletoSantanderServico {
     /** @property \TIExpert\WSBoletoSantander\ComunicadorCurlSOAP $comunicador Referência ao objeto a ser usado como ponte de comunicação entre o serviço e a extensão cURL do PHP. */
     private $comunicador;
 
+    private $nn;
+    private $cdBarra;
+    private $linDig;
+    private $codQrcode;
+    private $codUrlQrcode;
+    public $xml_remessa;
+    public $xml_retorno;
+    public $xml_acao;
+
     /** Cria uma nova instância de BoletoSantanderServico
      * 
      * @param \TIExpert\WSBoletoSantander\ComunicadorCurlSOAP $comunicadorCurlSOAP Referência ao objeto a ser usado como ponte de comunicação entre o serviço e a extensão cURL do PHP.
      */
     public function __construct(ComunicadorCurlSOAP $comunicadorCurlSOAP) {
         $this->comunicador = $comunicadorCurlSOAP;
+    }
+
+    public function getNossoNumero() {
+        return $this->nn;
+    }
+    
+    public function getCdBarra() {
+        return $this->cdBarra;
+    }
+    
+    public function getLinDig() {
+        return $this->linDig;
+    }
+
+    public function getCodQrcode() {
+        return $this->codQrcode;
+    }
+
+    public function getCodUrlQrcode() {
+        return $this->codUrlQrcode;
     }
 
     /** Solicita um tíquete de segurança para inclusão do boleto no Santander
@@ -228,6 +257,11 @@ class BoletoSantanderServico {
      */
     private function tituloFoiIncluidoComSucesso(\DOMDocument $dom) {
         try {
+            $this->processarNossoNumero($dom);
+            $this->processarCdBarra($dom);
+            $this->processarLinDig($dom);
+            $this->processarCodQrcode($dom);
+            $this->processarCodUrlQrcode($dom);
             $this->lancarExceptionSeRespostaForSOAPFault($dom);
             $this->processarErros($dom);
         } catch (\Exception $e) {
@@ -281,6 +315,42 @@ class BoletoSantanderServico {
         if (count($errorDesc) > 0) {
             throw new \Exception("Serviço do Santander retornou os seguintes erros: " . implode("; ", $errorDesc));
         }
+    }
+
+    private function processarNossoNumero(\DOMDocument $dom) {
+        $leitor = new LeitorSimplesXML($dom);
+        $nn = $leitor->getValorNo("nossoNumero");
+        $nn = ltrim($nn, 0);
+
+        $this->nn = $nn;
+    }
+
+    private function processarCdBarra(\DOMDocument $dom) {
+        $leitor = new LeitorSimplesXML($dom);
+        $cdBarra = $leitor->getValorNo("cdBarra");
+        
+        $this->cdBarra = $cdBarra;
+    }
+    
+    private function processarLinDig(\DOMDocument $dom) {
+        $leitor = new LeitorSimplesXML($dom);
+        $linDig = $leitor->getValorNo("linDig");
+        
+        $this->linDig = $linDig;
+    }
+
+    private function processarCodQrcode(\DOMDocument $dom) {
+        $leitor = new LeitorSimplesXML($dom);
+        $codQrcode = $leitor->getValorNo("codQrcode");
+        
+        $this->codQrcode = $codQrcode;
+    }
+
+    private function processarCodUrlQrcode(\DOMDocument $dom) {
+        $leitor = new LeitorSimplesXML($dom);
+        $codUrlQrcode = $leitor->getValorNo("codUrlQrcode");
+
+        $this->codUrlQrcode = $codUrlQrcode;
     }
 
     /** Gera um array a partir de uma string com layout definido pelo Santander contendo a descrição de todos os erros encontrados na requisição do serviço

@@ -69,6 +69,18 @@ class InstrucoesDeTitulo implements PropriedadesExportaveisParaArrayInterface, P
     /** @property float $percentualMaximo Valor máximo ou percentual máximo do título. */
     private $percentualMaximo;
 
+    /** @property int $tipoChaveDict Tipo de chave Dict. */
+    private $tipoChaveDict;
+
+    /** @property string $codChaveDict Código da chave Dict. */
+    private $codChaveDict;
+
+    /** @property string $txIdPix Código de identificação do QR Code. */
+    private $txIdPix;
+
+    /** @property string $ctrlParticipante Controle de participante. */
+    private $ctrlParticipante;
+
     /** Cria uma nova instância de InstrucoesDeTitulo
      * 
      * @param float $multa Percentual da multa com 2 decimais.
@@ -223,6 +235,38 @@ class InstrucoesDeTitulo implements PropriedadesExportaveisParaArrayInterface, P
      */
     public function getPercentualMaximo() {
         return $this->percentualMaximo;
+    }
+
+    /** Obtém o Tipo de chave Dict.
+     *
+     * @return int
+     */
+    public function getTipoChaveDict() {
+        return $this->tipoChaveDict;
+    }
+
+    /** Obtém o Código da chave Dict.
+     *
+     * @return string
+     */
+    public function getCodChaveDict() {
+        return $this->codChaveDict;
+    }
+
+    /** Obtém o Código de identificação do QR Code.
+     *
+     * @return string
+     */
+    public function getTxIdPix() {
+        return $this->txIdPix;
+    }
+
+    /** Obtém o Controle de participante.
+     *
+     * @return string
+     */
+    public function getCtrlParticipante() {
+        return $this->ctrlParticipante;
     }
 
     /** Determina o percentual da multa, com 2 decimais.
@@ -399,6 +443,38 @@ class InstrucoesDeTitulo implements PropriedadesExportaveisParaArrayInterface, P
         $this->percentualMaximo = $percentualMaximo;
     }
 
+    /** Determina o tipo de chave DICT
+     * 
+     * @param int $tipoChaveDict Tipo de chave DICT
+     */
+    public function setTipoChaveDict(int $tipoChaveDict = 1){
+        $this->tipoChaveDict = $tipoChaveDict;
+    }
+
+    /** Determina o código da chave DICT
+     *
+     * @param string $codChaveDict Código da chave DICT
+     */
+    public function setCodChaveDict(string $codChaveDict = null){
+        $this->codChaveDict = $codChaveDict;
+    }
+
+    /** Determina o código de identificação do QR Code
+     *
+     * @param string $txIdPix Código da chave DICT
+     */
+    public function setTxIdPix(string $txIdPix = null){
+        $this->txIdPix = $txIdPix;
+    }
+
+    /** Determina o controle de participante
+     *
+     * @param string $ctrlParticipante controle de participante
+     */
+    public function setCtrlParticipante(string $ctrlParticipante = null){
+        $this->ctrlParticipante = $ctrlParticipante;
+    }
+
     /** Exporta um array associativo no qual as chaves são as propriedades representadas como no WebService do Santander
      * 
      * @return array
@@ -421,6 +497,12 @@ class InstrucoesDeTitulo implements PropriedadesExportaveisParaArrayInterface, P
         $array["TITULO.TP-VALOR"] = $this->getTipoValor();
         $array["TITULO.VL-PERC-MINIMO"] = Util::formatarNumero($this->getPercentualMinimo(), 5, ',', '');
         $array["TITULO.VL-PERC-MAXIMO"] = Util::formatarNumero($this->getPercentualMaximo(), 5, ',', '');
+        
+        $tipoChaveDict = $this->getTipoChaveDict();
+        if(is_numeric($tipoChaveDict)) $array["TITULO.TIPO-CHAVE-DICT"] = $tipoChaveDict;
+
+        $codChaveDict = $this->getCodChaveDict();
+        if(trim($codChaveDict) !== '') $array["TITULO.COD-CHAVE-DICT"] = $codChaveDict;
 
         return $array;
     }

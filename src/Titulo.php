@@ -48,6 +48,18 @@ class Titulo implements PropriedadesExportaveisParaArrayInterface, PropriedadesI
     /** @property InstrucoesDeTitulo $instrucoes Instruções do que o banco Santander deve fazer com o título bancário. */
     private $instrucoes;
 
+    /** property int $tipoDoc Tipo de Documento do Sacador Avalista */
+    private $tipoDocAvalista;
+    
+    /** property string $numeroDoc CPF/CNPJ do Sacador Avalista */
+    private $numeroDocAvalista;
+    
+    /** property string $nome Nome do Sacador Avalista */
+    private $nomeAvalista;
+
+    /** property string $usoEmpresa */
+    private $usoEmpresa;
+
     /** Cria uma nova instância de Titulo
      * 
      * @param float $valor Valor nominal do título com 2 casas decimais. 
@@ -150,6 +162,37 @@ class Titulo implements PropriedadesExportaveisParaArrayInterface, PropriedadesI
         return $this->instrucoes;
     }
 
+    /** Obtém o tipo de documento do sacador avalista
+     *
+     * @return string
+     */
+    public function getTipoDocAvalista() {
+        return $this->tipoDocAvalista;
+    }
+
+    /** Obtém o número de documento do sacador avalista
+     *
+     * @return string
+     */
+    public function getNumeroDocAvalista() {
+        return $this->numeroDocAvalista;
+    }
+
+    /** Obtém o nome do sacador avalista
+     *
+     * @return string
+     */
+    public function getNomeAvalista() {
+        return $this->nomeAvalista;
+    }
+
+    /** Obtém o valor do campo uso Empresa 
+     * @return string 
+    */
+    public function getUsoEmpresa(){
+        return $this->usoEmpresa;
+    }
+
     /** Determina o número do título no banco.
      * 
      * @param string $nossoNumero Número do Título no Banco.
@@ -235,6 +278,42 @@ class Titulo implements PropriedadesExportaveisParaArrayInterface, PropriedadesI
      */
     public function setMensagem($mensagem) {
         $this->mensagem = $mensagem;
+        return $this;
+    }
+
+    /** Determina o tipo de documento do sacador avalista
+     *
+     * @param int $tipoDocAvalista Tipo de Documento do sacador avalista.
+     * @return \TIExpert\WSBoletoSantander\Titulo
+     */
+    public function setTipoDocAvalista($tipoDocAvalista = NULL) {
+        $this->tipoDocAvalista = $tipoDocAvalista;
+        return $this;
+    }
+
+    /** Determina o número de documento do sacador avalista
+     *
+     * @param int $numeroDocAvalista Número de Documento do sacador avalista.
+     * @return \TIExpert\WSBoletoSantander\Titulo
+     */
+    public function setNumeroDocAvalista($numeroDocAvalista = NULL) {
+        $this->numeroDocAvalista = $numeroDocAvalista;
+        return $this;
+    }
+
+    /** Determina o nome do sacador avalista
+     *
+     * @param string $nomeAvalista Nome do sacador avalista.
+     * @return \TIExpert\WSBoletoSantander\Titulo
+     */
+    public function setNomeAvalista($nomeAvalista = NULL) {
+        $this->nomeAvalista = $nomeAvalista;
+        return $this;
+    }
+
+    /** Determina campos uso empresa */
+    private function setUsoEmpresa($usoEmpresa = null){
+        $this->usoEmpresa = $usoEmpresa;
         return $this;
     }
 
