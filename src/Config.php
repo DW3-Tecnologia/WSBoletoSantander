@@ -60,18 +60,23 @@ class Config {
      * 
      * @param string $caminhoArquivoConfig Caminho para o arquivo de configuração utilizado. Se nada for informado, então, será considerado o arquivo config.ini da mesma pasta que o arquivo da classe Config.
      */
-    private function __construct() {
-        $this->carregarConfiguracao();
+    private function __construct($config = null) {
+        if(!empty($config)) {
+            $this->config = $config;
+        } else {
+            $this->carregarConfiguracao();
+        }
     }
 
     /** Obtém uma instância de Config
      *
      * @return Config
      */
-    public static function getInstance() {
+    public static function getInstance($config = null) {
         if (is_null(self::$instance)) {
-            self::$instance = new Config();
+            self::$instance = new Config($config);
         }
+        self::$instance::$config = $config;
         return self::$instance;
     }
 

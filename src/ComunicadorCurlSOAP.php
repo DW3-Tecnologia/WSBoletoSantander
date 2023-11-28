@@ -25,6 +25,13 @@ namespace TIExpert\WSBoletoSantander;
  */
 class ComunicadorCurlSOAP {
 
+    public $configExternas;
+
+    public function __construct($config)
+    {
+        $this->configExternas = $config;
+    }
+
     /** Executa uma comunicação com o endpoint enviando uma string em formato XML
      * 
      * @param string $endpoint Url que deve ser atingida para executar a ação do WebService
@@ -88,7 +95,7 @@ class ComunicadorCurlSOAP {
      * @param array $arrayConfig Array contendo as configurações atuais do cURL
      */
     public function configurarCertificadosDeSeguranca(&$arrayConfig) {
-        $conf = Config::getInstance();
+        $conf = Config::getInstance($this->configExternas);
 
         $arrayConfig[CURLOPT_SSL_VERIFYPEER] = $conf->getGeral("assegurar_endpoint");
         $arrayConfig[CURLOPT_SSL_VERIFYHOST] = $conf->getGeral("assegurar_endpoint") ? 2 : 0;
