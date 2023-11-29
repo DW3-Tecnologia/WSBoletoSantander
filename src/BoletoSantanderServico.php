@@ -51,6 +51,10 @@ class BoletoSantanderServico {
     public function getNossoNumero() {
         return $this->nn;
     }
+
+    public function getNossoNumeroSemDV() {
+        return substr($this->nn, 0, -1);
+    }
     
     public function getCdBarra() {
         return $this->cdBarra;
@@ -104,6 +108,8 @@ class BoletoSantanderServico {
         $xml->writeElement("expiracao", 100);
         $xml->writeElement("sistema", "YMB");
         $xml->endDocument();
+        
+        $this->xml_remessa = $xml->outputMemory(false);
 
         $retorno = $this->executarServico(self::TICKET_ENDPOINT, $xml);
 
@@ -141,6 +147,7 @@ class BoletoSantanderServico {
     private function procederTicket(Ticket $ticket, $acao) {
         $xml = $this->criarEnvelopeParaTicket($ticket, $acao);
         $resposta = $this->executarServico(self::COBRANCA_ENDPOINT, $xml);
+        $this->xml_retorno = $resposta;
         return $this->converterRespostaParaDOMDocument($resposta);
     }
 
@@ -155,6 +162,7 @@ class BoletoSantanderServico {
         $xml->startElement($nomeAcao);
         $xml->writeRaw($ticket->exportarParaXml("dto"));
         $xml->endDocument();
+        $this->xml_acao = $xml->outputMemory(false);
         return $xml;
     }
 
