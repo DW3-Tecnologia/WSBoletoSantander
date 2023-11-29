@@ -75,8 +75,9 @@ class Config {
     public static function getInstance($config = null) {
         if (is_null(self::$instance)) {
             self::$instance = new Config($config);
+        } else if(!is_null($config)) {
+            self::$instance::$config = $config;
         }
-        self::$instance::$config = $config;
         return self::$instance;
     }
 
