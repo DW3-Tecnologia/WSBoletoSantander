@@ -301,12 +301,8 @@ class BoletoSantanderServico {
      */
     private function lancarExceptionSeRespostaForSOAPFault(\DOMDocument $dom) {
         $leitor = new LeitorSimplesXML($dom);
-        try {
-            $faultString = $leitor->getValorNo("faultstring");
-            throw new \Exception($faultString);
-        } catch (\Exception $e) {
-            return;
-        }
+        $faultString = $leitor->getValorNo("faultstring");
+        throw new \Exception($faultString);
     }
 
     /** Lança uma exceção contendo todos os erros informados na resposta do serviço de inclusão de título
