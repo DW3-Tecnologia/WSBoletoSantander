@@ -350,12 +350,15 @@ class Titulo implements PropriedadesExportaveisParaArrayInterface, PropriedadesI
     public function exportarArray() {
         $formatoDataPadrao = Config::getInstance()->getGeral("formato_data");
 
-        $array["TITULO.NOSSO-NUMERO"] = str_pad($this->getNossoNumeroComDigito(), 13, "0", STR_PAD_LEFT);
-        $array["TITULO.SEU-NUMERO"] = str_pad($this->getSeuNumero(), 15, "0", STR_PAD_LEFT);
+        if(strlen($this->getNossoNumero()) > 0) {
+            $array["TITULO.NOSSO-NUMERO"] = str_pad($this->getNossoNumero(), 13, "0", STR_PAD_LEFT);
+        }
+        
+        $array["TITULO.SEU-NUMERO"] = $this->getSeuNumero();
         $array["TITULO.DT-VENCTO"] = $this->getDataVencimento()->format($formatoDataPadrao);
         $array["TITULO.DT-EMISSAO"] = $this->getDataEmissao()->format($formatoDataPadrao);
         $array["TITULO.ESPECIE"] = $this->getEspecie();
-        $array["TITULO.VL-NOMINAL"] = number_format($this->getValor() * 100, 0, "", "");
+        $array["TITULO.VL-NOMINAL"] = $this->getValor();
         $array["MENSAGEM"] = wordwrap($this->getMensagem(), 100, "\r\n");
         return $array;
     }

@@ -44,7 +44,12 @@ class LeitorSimplesXML {
      */
     public function getValorNo($tagName) {
         try {
-            return $this->xml->getElementsByTagName($tagName)->item(0)->nodeValue;
+
+            $oXml = $this->xml->getElementsByTagName($tagName);
+
+            if($oXml->length > 0) return $oXml->item(0)->nodeValue;
+            else return null;
+
         } catch (\Exception $e) {
             throw $e;
         }

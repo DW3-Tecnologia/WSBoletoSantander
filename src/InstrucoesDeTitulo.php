@@ -495,14 +495,20 @@ class InstrucoesDeTitulo implements PropriedadesExportaveisParaArrayInterface, P
         $array["TITULO.TP-PAGAMENTO"] = $this->getTipoPagamento();
         $array["TITULO.QT-PARCIAIS"] = $this->getQtdParciais();
         $array["TITULO.TP-VALOR"] = $this->getTipoValor();
-        $array["TITULO.VL-PERC-MINIMO"] = Util::formatarNumero($this->getPercentualMinimo(), 5, ',', '');
-        $array["TITULO.VL-PERC-MAXIMO"] = Util::formatarNumero($this->getPercentualMaximo(), 5, ',', '');
+        $array["TITULO.VL-PERC-MINIMO"] = Util::formatarNumero($this->getPercentualMinimo(), 5, '', '');
+        $array["TITULO.VL-PERC-MAXIMO"] = Util::formatarNumero($this->getPercentualMaximo(), 5, '', '');
         
         $tipoChaveDict = $this->getTipoChaveDict();
         if(is_numeric($tipoChaveDict)) $array["TITULO.TIPO-CHAVE-DICT"] = $tipoChaveDict;
 
         $codChaveDict = $this->getCodChaveDict();
         if(trim($codChaveDict) !== '') $array["TITULO.COD-CHAVE-DICT"] = $codChaveDict;
+
+        $txIdPix = $this->getTxIdPix();
+        if(trim($txIdPix) !== '') $array["TITULO.TXID-PIX"] = $txIdPix;
+
+        $ctrlParticipante = $this->getCtrlParticipante();
+        if(trim($ctrlParticipante) !== '') $array["TITULO.CTRL-PARTICIPANTE"] = $ctrlParticipante;
 
         return $array;
     }

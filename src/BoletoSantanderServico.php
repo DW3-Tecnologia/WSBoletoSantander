@@ -25,12 +25,11 @@ namespace TIExpert\WSBoletoSantander;
  */
 class BoletoSantanderServico {
 
-    const TICKET_ENDPOINT = "https://ymbdlb.santander.com.br/dl-ticket-services/TicketEndpointService";
-    const COBRANCA_ENDPOINT = "https://ymbcash.santander.com.br/ymbsrv/CobrancaV5EndpointService";
+    const TICKET_ENDPOINT = "https://ymbdlb.santander.com.br:443/dl-ticket-services/TicketEndpointService";
+    const COBRANCA_ENDPOINT = "https://ymbcash.santander.com.br:443/ymbsrv/CobrancaV5EndpointService";
 
     /** @property \TIExpert\WSBoletoSantander\ComunicadorCurlSOAP $comunicador Referência ao objeto a ser usado como ponte de comunicação entre o serviço e a extensão cURL do PHP. */
     private $comunicador;
-
     private $nn;
     private $cdBarra;
     private $linDig;
@@ -108,7 +107,7 @@ class BoletoSantanderServico {
         $xml->writeElement("expiracao", 100);
         $xml->writeElement("sistema", "YMB");
         $xml->endDocument();
-        
+
         $this->xml_remessa = $xml->outputMemory(false);
 
         $retorno = $this->executarServico(self::TICKET_ENDPOINT, $xml);
@@ -124,7 +123,6 @@ class BoletoSantanderServico {
      */
     public function incluirTitulo(Ticket $ticket) {
         $respostaXML = $this->procederTicket($ticket, "registraTitulo");
-
         return $this->tituloFoiIncluidoComSucesso($respostaXML);
     }
 
@@ -158,8 +156,8 @@ class BoletoSantanderServico {
      * @return \XMLWriter
      */
     private function criarEnvelopeParaTicket(Ticket $ticket, $nomeAcao) {
-        $xml = $this->iniciarXmlSoapEnvelope();
-        $xml->startElement($nomeAcao);
+        $xml = $this->iniciarXmlSoapEnvelopeTicket();
+        $xml->startElement('impl:'.$nomeAcao);
         $xml->writeRaw($ticket->exportarParaXml("dto"));
         $xml->endDocument();
         $this->xml_acao = $xml->outputMemory(false);
@@ -175,6 +173,22 @@ class BoletoSantanderServico {
         $xml->openMemory();
 
         $xml->startElementNs("soapenv", "Envelope", "http://schemas.xmlsoap.org/soap/envelope/");
+        $xml->writeElementNs("soapenv", "Header", NULL);
+        $xml->startElementNs("soapenv", "Body", NULL);
+
+        return $xml;
+    }
+
+    /** Inicia um novo objeto XMLWriter com o nó raiz Envelope, o nó Header e o nó Body aberto para receber conteúdo.
+     * 
+     * @return \XMLWriter
+     */
+    private function iniciarXmlSoapEnvelopeTicket() {
+        $xml = new \XMLWriter();
+        $xml->openMemory();
+
+        $xml->startElementNs("soapenv", "Envelope", "http://schemas.xmlsoap.org/soap/envelope/");
+        //$xml->writeAttributeNs("soapenv", "Envelope", "http://impl.webservice.v3.ymb.app.bsbr.altec.com/", 'impl');
         $xml->writeElementNs("soapenv", "Header", NULL);
         $xml->startElementNs("soapenv", "Body", NULL);
 

@@ -40,7 +40,17 @@ class ComunicadorCurlSOAP {
      * @throws Exception
      */
     public function chamar($endpoint, $endpointConfig) {
+        if($endpoint == BoletoSantanderServico::COBRANCA_ENDPOINT) {
+
+            //$endpointConfig[10015] = str_replace('xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"', 'xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:impl="http://impl.webservice.v4.ymb.app.bsbr.altec.com/"', $endpointConfig[10015]);
+            $endpointConfig[10015] = str_replace('xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"', 'xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:impl="http://impl.webservice.v5.ymb.app.bsbr.altec.com/"', $endpointConfig[10015]);
+
+            $endpointConfig[10023][2] = 'Content-length: ' . strlen($endpointConfig[10015]);
+
+        }
         $ch = curl_init($endpoint);
+        curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
+
         curl_setopt_array($ch, $endpointConfig);
 
         $response = curl_exec($ch);
